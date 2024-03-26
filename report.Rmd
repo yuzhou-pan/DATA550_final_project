@@ -1,0 +1,89 @@
+---
+title: "Zomato US Restaurants Analysis"
+author: "Yuzhou Pan"
+date: "2024-03-25"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+Zomato is a food rating and delivery service across the world. Each restaurant in the dataset is uniquely identified by its Restaurant Id with attributes of its characteristics such as the location, average rating, average cost, whether or not it has delivery services. The collected data has been stored in the Comma Separated Value file Zomato.csv, retrieved from https://www.kaggle.com/datasets/shrutimehta/zomato-restaurants-data?select=zomato.csv. The dataset has been cleaned and some variables were renamed. Below is a code book.
+
+\begin{center}
+\begin{tabular}{| l | l |}
+  \hline
+  \textbf{Variable} & \textbf{Description}\\
+  \hline
+  Restaurant & Id	Unique id of every restaurant across various cities of the world\\
+  Restaurant.Name &	Name of the restaurant\\
+  Country &	Country in which restaurant is located\\
+  City &	City in which restaurant is located\\
+  Address &	Address of the restaurant\\
+  Locality & Location in the city\\
+  Locality.Verbose & Detailed description of the locality\\
+  Longitude	& Longitude coordinate of the restaurant's location\\
+  Latitude & Latitude coordinate of the restaurant's location\\
+  Cuisines & Cuisines offered by the restaurant\\
+  Average.Cost.for.two & Cost for two people in different currencies\\
+  Currency & Currency of the country\\
+  Has.Table.booking &	yes/no\\
+  Has.Online.delivery &	yes/no\\
+  Is.delivering &	yes/no\\
+  Switch.to.order menu &	yes/no\\
+  Price.range	& range of price of food\\
+  Aggregate.Rating & Average rating out of 5\\
+  Votes	& Number of ratings\\
+  \hline
+\end{tabular}
+\end{center}
+  
+The analysis will be restricted to the restaurants in the United States. The objective is whether there is association between the aggregate rating of restaurants and the average cost for two. 
+
+\newpage
+
+# Load Cleaned Dataset
+
+```{r, message=FALSE, warning=FALSE, error=FALSE}
+here::i_am("report.Rmd")
+zomato_us <- readRDS(here::here("output/zomato_us.rds"))
+```
+
+# Table
+
+There are 434 US restaurants registered on Zomato in the dataset. They have a median rating at 4.00 out of 5, with a 25th percentile at 3.70 and a 75th percentile at 4.30. None of the US restaurants on Zomato provide online delivery or table booking, suggesting that Zomato functionality could be limited in the United Sates. The average cost for two at US restaurants has a median of 25 US dollars, with a lower quartile (25th percentile) at 10 US\$ and a upper quartile (75th percentile) at 40 US\$. 
+
+```{r, warning=FALSE, message=FALSE, error=FALSE}
+library(gtsummary)
+library(tidyverse)
+zomato_us %>%
+  select(one_of(c("Average.Cost.for.two", "Has.Table.booking", "Has.Online.delivery", 
+                  "Aggregate.rating", "Votes"))) %>%
+  rename("Average Cost for Two (US$)" = "Average.Cost.for.two",
+         "Has Table Booking" = "Has.Table.booking", 
+         "Has Online Delivery" = "Has.Online.delivery",
+         "Average Rating" = "Aggregate.rating",
+         "Number of People Rated" = "Votes") %>%
+  tbl_summary() %>%
+  modify_caption("Zomato Ratings of US Restaurants") %>%
+  as_hux_table()
+```
+
+\newpage
+
+# Figure
+
+Potential outlier is identified with average rating at 0, and it could be removed in later analysis. A linear regression fitted line is overlaid on a scatterplot showing the relationship between the average rating and the average cost. The slightly upward blue line indicates a positive correlation that higher costs are related to higher ratings in US restaurants on Zomato.
+
+```{r, warning=FALSE, message=FALSE, error=FALSE}
+ggplot(zomato_us, aes(x = Average.Cost.for.two, y = Aggregate.rating)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(x = "Average Cost for Two (US$)",
+       y = "Average Rating",
+       title = "Scatterplot of Average Rating vs. Average Cost for Two") +
+  theme_minimal()
+```
