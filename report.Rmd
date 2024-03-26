@@ -57,8 +57,11 @@ zomato_us <- readRDS(here::here("output/zomato_us.rds"))
 There are 434 US restaurants registered on Zomato in the dataset. They have a median rating at 4.00 out of 5, with a 25th percentile at 3.70 and a 75th percentile at 4.30. None of the US restaurants on Zomato provide online delivery or table booking, suggesting that Zomato functionality could be limited in the United Sates. The average cost for two at US restaurants has a median of 25 US dollars, with a lower quartile (25th percentile) at 10 US\$ and a upper quartile (75th percentile) at 40 US\$. 
 
 ```{r, warning=FALSE, message=FALSE, error=FALSE}
+if (!require("gtsummary")) install.packages("gtsummary")
+if (!require("dplyr")) install.packages("dplyr")
+
 library(gtsummary)
-library(tidyverse)
+library(dplyr)
 zomato_us %>%
   select(one_of(c("Average.Cost.for.two", "Has.Table.booking", "Has.Online.delivery", 
                   "Aggregate.rating", "Votes"))) %>%
@@ -79,6 +82,9 @@ zomato_us %>%
 Potential outlier is identified with average rating at 0, and it could be removed in later analysis. A linear regression fitted line is overlaid on a scatterplot showing the relationship between the average rating and the average cost. The slightly upward blue line indicates a positive correlation that higher costs are related to higher ratings in US restaurants on Zomato.
 
 ```{r, warning=FALSE, message=FALSE, error=FALSE}
+if (!require("ggplot2")) install.packages("ggplot2")
+
+library(ggplot2)
 ggplot(zomato_us, aes(x = Average.Cost.for.two, y = Aggregate.rating)) +
   geom_point() +
   geom_smooth(method = "lm") +
