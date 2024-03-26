@@ -12,6 +12,6 @@ zomato %>%
   left_join(., country, by = c("Country.Code" = "Country Code")) %>%
   select(-c("Country.Code", "Rating.color", "Rating.text")) -> zomato_new
 
-zomato.new[zomato_new$Country == "United States", ] -> zomato_us
+zomato_new[zomato_new$Country == "United States", ] -> zomato_us
 
 saveRDS(zomato_us, file = here::here("output/zomato_us.rds"))
