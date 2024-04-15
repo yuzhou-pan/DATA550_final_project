@@ -59,6 +59,7 @@ There are 434 US restaurants registered on Zomato in the dataset. They have a me
 ```{r, warning=FALSE, message=FALSE, error=FALSE}
 library(gtsummary)
 library(dplyr)
+library(huxtable)
 zomato_us %>%
   select(one_of(c("Average.Cost.for.two", "Has.Table.booking", "Has.Online.delivery", 
                   "Aggregate.rating", "Votes"))) %>%
