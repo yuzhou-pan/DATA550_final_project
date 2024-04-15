@@ -1,7 +1,3 @@
-if (!require("dplyr")) install.packages("dplyr")
-if (!require("readxl")) install.packages("readxl")
-if (!require("here")) install.packages("here")
-
 library(dplyr)
 library(readxl)
 library(here)
