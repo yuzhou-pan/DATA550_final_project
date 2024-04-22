@@ -33,5 +33,5 @@ COPY output output
 
 RUN mkdir report
 
-CMD make && mv report.html report
+CMD make report.html && mv report.html report
 
