@@ -18,6 +18,8 @@ project_image: Dockerfile $(PROJECTFILES) $(RENVFILES)
 	docker build -t project_image .
 	touch $@
 	
-report/report.html: 
-	docker pull yuzhoupan/project_image
-	docker run -v "/$$(pwd)/report":/project/report yuzhoupan/project_image
+windows_report: 
+	docker pull yuzhoupan/project_image && docker run -v "/$$(pwd)/report":/project/report yuzhoupan/project_image
+	
+mac_report: 
+	docker pull yuzhoupan/project_image && docker run -v "$$(pwd)/report":/project/report yuzhoupan/project_image
