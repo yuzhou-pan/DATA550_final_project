@@ -1,4 +1,6 @@
-In RStudio, clicking `File -> New Project... -> Existing Directory` to create an R project associated with the cloned files.
+# Create a Project
+
+In RStudio, clicking `File -> New Project... -> Existing Directory` to create a project associated with the cloned files.
 
 # Build the Docker Image
 
